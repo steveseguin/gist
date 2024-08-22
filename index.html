@@ -287,7 +287,8 @@
             const input = document.getElementById("input").value;
             const previewElement = document.getElementById('preview');
             const sharableElement = document.getElementById('sharable');
-
+            const anchor = window.location.hash.slice(1);
+            
             if (input) {
                 const convertedUrl = convertGistUrl(input);
                 
@@ -319,11 +320,10 @@
 
                         // Handle anchor after a short delay to ensure content is loaded
                         setTimeout(() => {
-                            const anchor = window.location.hash.slice(1);
                             if (anchor) {
                                 scrollToElement(anchor);
                             }
-                        }, 100);
+                        }, 200);
                     })
                     .catch(error => {
                         console.error('Error loading the Markdown:', error);
