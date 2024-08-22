@@ -220,15 +220,18 @@
         <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
         <button onclick="generate()">Generate</button>
         <hr>
-        An example URL you can try is: <span>https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span>
+        
     </div>
     <div id="anchor-selector">
         <select id="anchor-select" onchange="updateAnchor()">
             <option value="">Select a section to anchor to</option>
         </select>
     </div>
-    <div id="sharable"></div>
-    <div id="preview"></div>
+    <div id="sharable">
+         An example URL you can try is: <b>https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</b>
+    </div>
+    <div id="preview">
+    </div>
 
     <script>
         function convertGistUrl(url) {
