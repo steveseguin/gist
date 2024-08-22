@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown to HTML Viewer</title>
-    <meta name="description" content="View Markdown files as HTML">
-    <meta name="keywords" content="markdown, gist, viewer, converter">
+    <title>Enhanced Markdown to HTML Viewer</title>
+    <meta name="description" content="An interactive tool to view Markdown files as HTML with anchor selection and easy sharing capabilities. Perfect for developers and content creators.">
+    <meta name="keywords" content="markdown, html, viewer, converter, anchor, gist, github, sharing, developer tool">
     <meta name="author" content="Steve Seguin">
-    <link rel="icon" type="image/x-icon" href="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://markdown.invite.cam">
+    <meta property="og:title" content="Enhanced Markdown to HTML Viewer">
+    <meta property="og:description" content="View Markdown files as HTML with anchor selection and easy sharing. Great for developers and content creators.">
+
+    <!-- Twitter -->
+    <meta property="twitter:url" content="https://markdown.invite.cam">
+    <meta property="twitter:title" content="Enhanced Markdown to HTML Viewer">
+    <meta property="twitter:description" content="View Markdown files as HTML with anchor selection and easy sharing. Great for developers and content creators.">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
 
@@ -211,27 +222,38 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
+        }.header-anchor {
+            opacity: 0;
+            text-decoration: none;
+            margin-left: -20px;
+            padding-right: 4px;
+        }
+        h1:hover .header-anchor,
+        h2:hover .header-anchor,
+        h3:hover .header-anchor,
+        h4:hover .header-anchor,
+        h5:hover .header-anchor,
+        h6:hover .header-anchor {
+            opacity: 1;
+        }
+        #content-only-mode {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Enhanced Markdown to HTML Viewer</h1>
-    <div id="input-container">
-        <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
-        <button onclick="generate()">Generate</button>
-        <hr>
-        
+    <div id="full-interface">
+        <h1>Enhanced Markdown to HTML Viewer</h1>
+        <div id="input-container">
+            <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
+            <button onclick="generate()">Generate</button>
+            <hr>
+            An example URL you can try is: <span>https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span>
+        </div>
+        <div id="sharable"></div>
     </div>
-    <div id="anchor-selector">
-        <select id="anchor-select" onchange="updateAnchor()">
-            <option value="">Select a section to anchor to</option>
-        </select>
-    </div>
-    <div id="sharable">
-         An example URL you can try is: <b>https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</b>
-    </div>
-    <div id="preview">
-    </div>
+    <div id="content-only-mode"></div>
+    <div id="preview"></div>
 
     <script>
         function convertGistUrl(url) {
@@ -250,7 +272,6 @@
             const input = document.getElementById("input").value;
             const previewElement = document.getElementById('preview');
             const sharableElement = document.getElementById('sharable');
-            const anchorSelectorElement = document.getElementById('anchor-selector');
 
             if (input) {
                 const convertedUrl = convertGistUrl(input);
@@ -272,56 +293,44 @@
                             document.title = titleMatch[1] + ' - Markdown Viewer';
                         }
 
-                        // Generate anchor options
-                        const anchorSelect = document.getElementById('anchor-select');
-                        anchorSelect.innerHTML = '<option value="">Select a section to anchor to</option>';
+                        // Add clickable anchors to headers
                         const headers = previewElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
                         headers.forEach((header, index) => {
                             const id = `section-${index}`;
                             header.id = id;
-                            const option = document.createElement('option');
-                            option.value = id;
-                            option.textContent = header.tagName + ': ' + header.textContent;
-                            anchorSelect.appendChild(option);
+                            const anchor = document.createElement('a');
+                            anchor.className = 'header-anchor';
+                            anchor.href = `#${id}`;
+                            anchor.textContent = '#';
+                            anchor.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                updateSharableLink(id);
+                                scrollToElement(id);
+                            });
+                            header.insertBefore(anchor, header.firstChild);
                         });
-
-                        // Show anchor selector
-                        anchorSelectorElement.style.display = 'block';
 
                         // Update URL and sharable link
                         updateSharableLink();
 
-                        // Smooth scroll to preview
-                        previewElement.scrollIntoView({ behavior: 'smooth' });
+                        // Smooth scroll to sharable link
+                        sharableElement.scrollIntoView({ behavior: 'smooth' });
                     })
                     .catch(error => {
                         console.error('Error loading the Markdown:', error);
                         previewElement.innerHTML = `<p class="error">Error loading the Markdown. Please check the URL and try again.</p>`;
-                        anchorSelectorElement.style.display = 'none';
                     });
             } else {
                 previewElement.innerHTML = '<p class="error">Please enter a valid URL.</p>';
-                anchorSelectorElement.style.display = 'none';
             }
         }
 
-        function updateAnchor() {
-            updateSharableLink();
-            const anchorSelect = document.getElementById('anchor-select');
-            const selectedAnchor = anchorSelect.value;
-            if (selectedAnchor) {
-                document.getElementById(selectedAnchor).scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function updateSharableLink() {
+        function updateSharableLink(anchor = '') {
             const input = document.getElementById("input").value;
-            const anchorSelect = document.getElementById('anchor-select');
-            const selectedAnchor = anchorSelect.value;
             
             let sharableUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(input)}`;
-            if (selectedAnchor) {
-                sharableUrl += `#${selectedAnchor}`;
+            if (anchor) {
+                sharableUrl += `#${anchor}`;
             }
 
             // Update browser URL
@@ -335,20 +344,29 @@
             `;
         }
 
-        // Check for URL parameter and anchor on page load
+        function scrollToElement(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Check for URL parameter on page load
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const markdownUrl = urlParams.get('url');
             if (markdownUrl) {
                 document.getElementById('input').value = markdownUrl;
+                document.getElementById('full-interface').style.display = 'none';
+                document.getElementById('content-only-mode').style.display = 'block';
+                document.getElementById('preview').style.marginTop = '20px';
                 generate();
                 
                 // Handle anchor after a short delay to ensure content is loaded
                 setTimeout(() => {
                     const anchor = window.location.hash.slice(1);
                     if (anchor) {
-                        document.getElementById('anchor-select').value = anchor;
-                        updateAnchor();
+                        scrollToElement(anchor);
                     }
                 }, 1000);
             }
