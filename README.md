@@ -18,20 +18,7 @@ The Enhanced Markdown to HTML Viewer is a powerful, user-friendly web applicatio
 2. Click the "Generate" button to view the rendered HTML.
 3. Use the anchor selector to choose specific sections of the document.
 4. Share the automatically generated link to the full document or a specific section.
-
-## Installation
-
-1. Clone this repository:
-   ```
-   git clone https://github.com/your-username/markdown-viewer.git
-   ```
-2. Navigate to the project directory:
-   ```
-   cd markdown-viewer
-   ```
-3. Open `index.html` in your web browser.
-
-Alternatively, you can host this on any web server or static site hosting service.
+You can host this on any web server or static site hosting service.
 
 ## Technologies Used
 
