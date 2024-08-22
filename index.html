@@ -203,15 +203,29 @@
             color: red;
             margin-top: 10px;
         }
+        #anchor-selector {
+            margin-top: 20px;
+            display: none;
+        }
+        #anchor-selector select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Markdown to HTML Viewer</h1>
+    <h1>Enhanced Markdown to HTML Viewer</h1>
     <div id="input-container">
         <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
         <button onclick="generate()">Generate</button>
         <hr>
         An example URL you can try is: <span>https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span>
+    </div>
+    <div id="anchor-selector">
+        <select id="anchor-select" onchange="updateAnchor()">
+            <option value="">Select a section to anchor to</option>
+        </select>
     </div>
     <div id="sharable"></div>
     <div id="preview"></div>
@@ -233,6 +247,7 @@
             const input = document.getElementById("input").value;
             const previewElement = document.getElementById('preview');
             const sharableElement = document.getElementById('sharable');
+            const anchorSelectorElement = document.getElementById('anchor-selector');
 
             if (input) {
                 const convertedUrl = convertGistUrl(input);
@@ -254,12 +269,24 @@
                             document.title = titleMatch[1] + ' - Markdown Viewer';
                         }
 
-                        // Generate sharable link
-                        const sharableUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(input)}`;
-                        sharableElement.innerHTML = `
-                            <p>Sharable link:</p>
-                            <input type="text" value="${sharableUrl}" readonly style="width: 100%;">
-                        `;
+                        // Generate anchor options
+                        const anchorSelect = document.getElementById('anchor-select');
+                        anchorSelect.innerHTML = '<option value="">Select a section to anchor to</option>';
+                        const headers = previewElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                        headers.forEach((header, index) => {
+                            const id = `section-${index}`;
+                            header.id = id;
+                            const option = document.createElement('option');
+                            option.value = id;
+                            option.textContent = header.tagName + ': ' + header.textContent;
+                            anchorSelect.appendChild(option);
+                        });
+
+                        // Show anchor selector
+                        anchorSelectorElement.style.display = 'block';
+
+                        // Update URL and sharable link
+                        updateSharableLink();
 
                         // Smooth scroll to preview
                         previewElement.scrollIntoView({ behavior: 'smooth' });
@@ -267,23 +294,62 @@
                     .catch(error => {
                         console.error('Error loading the Markdown:', error);
                         previewElement.innerHTML = `<p class="error">Error loading the Markdown. Please check the URL and try again.</p>`;
+                        anchorSelectorElement.style.display = 'none';
                     });
             } else {
                 previewElement.innerHTML = '<p class="error">Please enter a valid URL.</p>';
+                anchorSelectorElement.style.display = 'none';
             }
         }
 
-        // Check for URL parameter on page load
+        function updateAnchor() {
+            updateSharableLink();
+            const anchorSelect = document.getElementById('anchor-select');
+            const selectedAnchor = anchorSelect.value;
+            if (selectedAnchor) {
+                document.getElementById(selectedAnchor).scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function updateSharableLink() {
+            const input = document.getElementById("input").value;
+            const anchorSelect = document.getElementById('anchor-select');
+            const selectedAnchor = anchorSelect.value;
+            
+            let sharableUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(input)}`;
+            if (selectedAnchor) {
+                sharableUrl += `#${selectedAnchor}`;
+            }
+
+            // Update browser URL
+            history.pushState(null, '', sharableUrl);
+
+            // Update sharable link display
+            const sharableElement = document.getElementById('sharable');
+            sharableElement.innerHTML = `
+                <p>Sharable link:</p>
+                <input type="text" value="${sharableUrl}" readonly style="width: 100%;">
+            `;
+        }
+
+        // Check for URL parameter and anchor on page load
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const markdownUrl = urlParams.get('url');
             if (markdownUrl) {
                 document.getElementById('input').value = markdownUrl;
                 generate();
+                
+                // Handle anchor after a short delay to ensure content is loaded
+                setTimeout(() => {
+                    const anchor = window.location.hash.slice(1);
+                    if (anchor) {
+                        document.getElementById('anchor-select').value = anchor;
+                        updateAnchor();
+                    }
+                }, 1000);
             }
         });
     </script>
 </body>
 </html>
-
-
