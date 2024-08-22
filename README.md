@@ -37,9 +37,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Contact
 
-Steve Seguin - [Your Email or Website]
+Steve Seguin - steve@seguin.email
 
-Project Link: [https://github.com/your-username/markdown-viewer](https://github.com/your-username/markdown-viewer)
+Project Link: [https://github.com/steveseguin/markdown-viewer](https://github.com/steveseguin/markdown-viewer)
 
 ## Acknowledgements
 
