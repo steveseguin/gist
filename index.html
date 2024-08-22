@@ -8,23 +8,18 @@
     <meta name="keywords" content="markdown, html, viewer, converter, anchor, gist, github, sharing, developer tool">
     <meta name="author" content="Steve Seguin">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='2' width='28' height='28' rx='3' ry='3' fill='%23f0f0f0' stroke='%23007bff' stroke-width='2'/><text x='16' y='22' font-family='Arial, sans-serif' font-size='16' font-weight='bold' text-anchor='middle' fill='%23007bff'>M↓</text></svg>">
-
-    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://markdown.invite.cam">
     <meta property="og:title" content="Sharable Markdown to HTML Viewer">
     <meta property="og:description" content="View Markdown files as HTML with anchor selection and easy sharing. Great for developers and content creators.">
-
     <!-- Twitter -->
     <meta property="twitter:url" content="https://markdown.invite.cam">
     <meta property="twitter:title" content="Sharable Markdown to HTML Viewer">
     <meta property="twitter:description" content="View Markdown files as HTML with anchor selection and easy sharing. Great for developers and content creators.">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
        <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-      
         :root {
             --bg-color: #e5e5e5;
             --text-color: #333;
@@ -42,7 +37,6 @@
             --input-border: #ddd;
             --sharable-bg: #f0f0f0;
         }
-
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #1a1a1a;
@@ -62,7 +56,6 @@
                 --sharable-bg: #333;
             }
         }
-        
         body {
             font-family: 'Poppins', Arial, sans-serif;
             line-height: 1.6;
@@ -73,28 +66,23 @@
             background-color: var(--bg-color);
             overflow-x: hidden;
         }
-        
         header {
             background: var(--header-bg);
             color: var(--header-text);
             padding: 20px;
             text-align: center;
         }
-        
         h1 {
             margin: 0;
             font-size: 2.4em;
         }
-        
         #markdown h1 {
             display: none;
         }
-        
         p {
             margin: 10px 0 0;
             font-size: 1.2em;
         }
-        
         .download-btn {
             background-color: var(--button-bg);
             color: var(--button-text);
@@ -109,12 +97,10 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-        
         .download-btn:hover {
             background-color: var(--button-hover);
             color: var(--button-text);
         }
-        
         .section {
             padding: 20px 20px 40px 20px;
             background-color: var(--content-bg);
@@ -122,17 +108,14 @@
             margin: 20px;
             border-radius: 10px;
         }
-        
         a {
             color: var(--link-color);
             text-decoration: none;
         }
-        
         a:hover {
             color: var(--link-hover);
             text-decoration: underline;
         }
-        
         .github-btn {
             background-color: var(--button-bg);
             color: var(--button-text);
@@ -145,33 +128,27 @@
             transition: background-color 0.3s;
             margin-top: 12px;
         }
-        
         .github-btn:hover {
             background-color: var(--button-hover);
         }
-        
         #content {
             background-color: var(--content-bg);
             padding: 20px;
             border-radius: 8px;
             border: 1px solid var(--input-border);
         }
-        
         #content pre, #content code {
             background-color: var(--code-bg);
             border-radius: 5px;
             padding: 5px;
             font-family: 'Courier New', Courier, monospace;
         }
-        
         img {
             max-width: 100%;
         }
-        
         #input-container {
             margin-bottom: 20px;
         }
-        
         #input {
             width: 70%;
             padding: 10px;
@@ -179,7 +156,6 @@
             color: var(--text-color);
             border: 1px solid var(--input-border);
         }
-        
         button {
             padding: 10px 15px;
             background-color: var(--button-bg);
@@ -187,37 +163,31 @@
             border: none;
             cursor: pointer;
         }
-        
         button:hover {
             background-color: var(--button-hover);
         }
-        
         #preview {
             border: 1px solid var(--input-border);
             padding: 20px;
             margin-top: 20px;
             background-color: var(--content-bg);
         }
-        
         #sharable {
             margin-top: 20px;
             padding: 10px;
             background-color: var(--sharable-bg);
             border-radius: 5px;
         }
-        
         .error {
             color: var(--error-color);
             margin-top: 10px;
         }
-        
         .header-anchor {
             opacity: 0;
             text-decoration: none;
             margin-left: -20px;
             padding-right: 4px;
         }
-        
         h1:hover .header-anchor,
         h2:hover .header-anchor,
         h3:hover .header-anchor,
@@ -226,11 +196,9 @@
         h6:hover .header-anchor {
             opacity: 1;
         }
-        
         #content-only-mode {
             display: none;
         }
-        
         .copy-btn {
             background-color: var(--button-bg);
             color: var(--button-text);
@@ -240,11 +208,9 @@
             cursor: pointer;
             margin-left: 10px;
         }
-        
         .copy-btn:hover {
             background-color: var(--button-hover);
         }
-        
         .example-url {
             background-color: var(--code-bg);
             padding: 5px;
@@ -263,35 +229,28 @@
             <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
             <button onclick="generate()">Generate</button>
             <br /><br /><br />
-            An example URL you can try is: <i></i><span class="example-url" onclick="copyExampleUrl(this)">https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span></i>
+            An example URL you can try is: <i></i><span class="example-url" onclick="copyExampleUrl(this)">https:
         </div>
         <div id="sharable"></div>
     </div>
     <div id="content-only-mode"></div>
     <div id="preview"></div>
-
     <script>
         function convertGistUrl(url) {
             const gistRegex = /^https:\/\/gist\.github\.com\/([^\/]+\/[^\/]+)/;
             const match = url.match(gistRegex);
-            
             if (match) {
                 const gistId = match[1];
                 return `https://gist.githubusercontent.com/${gistId}/raw`;
             }
-            
             return url;
         }
-
         function generate() {
             const input = document.getElementById("input").value;
             const previewElement = document.getElementById('preview');
             const sharableElement = document.getElementById('sharable');
-            const anchor = window.location.hash.slice(1);
-            
             if (input) {
                 const convertedUrl = convertGistUrl(input);
-                
                 fetch(convertedUrl)
                     .then(response => {
                         if (!response.ok) {
@@ -302,28 +261,14 @@
                     .then(text => {
                         const html = marked.parse(text);
                         previewElement.innerHTML = html;
-                        
-                        // Extract title from the first h1 tag
                         const titleMatch = html.match(/<h1[^>]*>(.*?)<\/h1>/);
                         if (titleMatch) {
                             document.title = titleMatch[1] + ' - Markdown Viewer';
                         }
-
-                        // Add clickable anchors to headers
                         addClickableAnchors();
-
-                        // Update URL and sharable link
                         updateSharableLink();
-
-                        // Smooth scroll to sharable link
                         sharableElement.scrollIntoView({ behavior: 'smooth' });
-
-                        // Handle anchor after a short delay to ensure content is loaded
-                        setTimeout(() => {
-                            if (anchor) {
-                                scrollToElement(anchor);
-                            }
-                        }, 200);
+                        handleAnchor();
                     })
                     .catch(error => {
                         console.error('Error loading the Markdown:', error);
@@ -333,7 +278,12 @@
                 previewElement.innerHTML = '<p class="error">Please enter a valid URL.</p>';
             }
         }
-
+        function handleAnchor() {
+            const anchor = window.location.hash.slice(1);
+            if (anchor) {
+                scrollToElement(anchor);
+            }
+        }
         function addClickableAnchors() {
             const headers = document.querySelectorAll('#preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6');
             headers.forEach((header, index) => {
@@ -351,19 +301,13 @@
                 header.insertBefore(anchor, header.firstChild);
             });
         }
-
         function updateSharableLink(anchor = '') {
             const input = document.getElementById("input").value;
-            
             let sharableUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(input)}`;
             if (anchor) {
                 sharableUrl += `#${anchor}`;
             }
-
-            // Update browser URL
             history.pushState(null, '', sharableUrl);
-
-            // Update sharable link display
             const sharableElement = document.getElementById('sharable');
             sharableElement.innerHTML = `
                 <p>Sharable link:</p>
@@ -371,29 +315,24 @@
                 <button onclick="copyToClipboard()" class="copy-btn">Copy</button>
             `;
         }
-
         function scrollToElement(id) {
             const element = document.getElementById(id);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         }
-
         function copyToClipboard() {
             const sharableInput = document.getElementById('sharableInput');
             sharableInput.select();
             document.execCommand('copy');
             alert('Link copied to clipboard!');
         }
-
         function copyExampleUrl(element) {
             const url = element.textContent;
             navigator.clipboard.writeText(url).then(() => {
                 alert('Example URL copied to clipboard!');
             });
         }
-
-        // Check for URL parameter on page load
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const markdownUrl = urlParams.get('url');
@@ -405,6 +344,15 @@
                 generate();
             }
         });
+         const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    handleAnchor();
+                    observer.disconnect();
+                }
+            });
+        });
+        observer.observe(document.getElementById('preview'), { childList: true, subtree: true });
     </script>
 </body>
 </html>
