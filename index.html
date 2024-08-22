@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to HTML Viewer</title>
+    <meta name="description" content="View Markdown files as HTML">
+    <meta name="keywords" content="markdown, gist, viewer, converter">
+    <meta name="author" content="Steve Seguin">
+    <link rel="icon" type="image/x-icon" href="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <style>
+
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+      
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            background-color: #e5e5e5;
+        	padding-bottom: 40px;
+        	line-height: 1.6;
+        	overflow-x: hidden;
+        }
+        
+        header {
+            background: #1a1a1a; /* Darker shade for a rich appearance */
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.4em;
+        }
+        
+        #markdown h1 {
+        	display:none;
+        }
+        
+        p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+        }
+        
+        #downloads {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .download-btn {
+            background-color: #007bff; /* Brighter shade of blue */
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        	color: white;
+        }
+        
+        #video {
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+        	max-width: calc(100% - 40px);
+        }
+        
+        iframe {
+            max-width: 100%;
+            border: none; /* Remove border for cleaner look */
+        }
+        
+        .section {
+            padding: 20px 20px 40px 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        	margin: 20px;
+            border-radius: 10px;
+        }
+        
+        .faq-item h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+        
+        .faq-item p {
+            font-size: 1em;
+            color: #666;
+        }
+        
+        footer {
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100vw;
+        }
+        footer p {
+        	margin: 0;
+        }
+        
+        a {
+            color: #007bff; /* Links color to match buttons */
+            text-decoration: none;
+        }
+        
+        a:hover {
+            color: #0056b3; /* Darker blue on hover */
+            text-decoration: underline; /* Underline on hover for better visibility */
+        }
+        
+        .github-btn {
+            background-color: #cecece;
+            color: black;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+            margin-top: 12px;
+        }
+        
+        .github-btn:hover {
+            background-color: #b0aeae; 
+        }
+        
+        #github-buttons {
+            text-align: center; 
+            margin: 20px 0 10px 0; 
+        }
+        .logo{
+        	max-height: 1.2em;
+        }
+        
+        #content {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        #content h1, #content h2, #content h3 {
+            color: #333;
+        }
+        
+        #content pre, #content code {
+            background-color: #eee;
+            border-radius: 5px;
+            padding: 5px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        #content a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        
+        img {
+        	max-width: 100%;
+        }
+        #input-container {
+            margin-bottom: 20px;
+        }
+        #input {
+            width: 70%;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #preview {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        #sharable {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Markdown to HTML Viewer</h1>
+    <div id="input-container">
+        <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist raw URL)">
+        <button onclick="generate()">Generate</button>
+    </div>
+    <div id="sharable"></div>
+    <div id="preview"></div>
+
+    <script>
+        function generate() {
+            const input = document.getElementById("input").value;
+            const previewElement = document.getElementById('preview');
+            const sharableElement = document.getElementById('sharable');
+
+            if (input) {
+                fetch(input)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        const html = marked.parse(text);
+                        previewElement.innerHTML = html;
+                        
+                        // Extract title from the first h1 tag
+                        const titleMatch = html.match(/<h1[^>]*>(.*?)<\/h1>/);
+                        if (titleMatch) {
+                            document.title = titleMatch[1] + ' - Markdown Viewer';
+                        }
+
+                        // Generate sharable link
+                        const sharableUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(input)}`;
+                        sharableElement.innerHTML = `
+                            <p>Sharable link:</p>
+                            <input type="text" value="${sharableUrl}" readonly style="width: 100%;">
+                        `;
+
+                        // Smooth scroll to preview
+                        previewElement.scrollIntoView({ behavior: 'smooth' });
+                    })
+                    .catch(error => {
+                        console.error('Error loading the Markdown:', error);
+                        previewElement.innerHTML = `<p class="error">Error loading the Markdown. Please check the URL and try again.</p>`;
+                    });
+            } else {
+                previewElement.innerHTML = '<p class="error">Please enter a valid URL.</p>';
+            }
+        }
+
+        // Check for URL parameter on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const markdownUrl = urlParams.get('url');
+            if (markdownUrl) {
+                document.getElementById('input').value = markdownUrl;
+                generate();
+            }
+        });
+    </script>
+</body>
+</html>
