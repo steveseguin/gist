@@ -239,6 +239,24 @@
         #content-only-mode {
             display: none;
         }
+ .copy-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .example-url {
+            background-color: #f8f8f8;
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -248,7 +266,7 @@
             <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
             <button onclick="generate()">Generate</button>
             <hr>
-            An example URL you can try is: <span>https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span>
+            An example URL you can try is: <span class="example-url" onclick="copyExampleUrl(this)">https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span>
         </div>
         <div id="sharable"></div>
     </div>
@@ -294,27 +312,21 @@
                         }
 
                         // Add clickable anchors to headers
-                        const headers = previewElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                        headers.forEach((header, index) => {
-                            const id = `section-${index}`;
-                            header.id = id;
-                            const anchor = document.createElement('a');
-                            anchor.className = 'header-anchor';
-                            anchor.href = `#${id}`;
-                            anchor.textContent = '#';
-                            anchor.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                updateSharableLink(id);
-                                scrollToElement(id);
-                            });
-                            header.insertBefore(anchor, header.firstChild);
-                        });
+                        addClickableAnchors();
 
                         // Update URL and sharable link
                         updateSharableLink();
 
                         // Smooth scroll to sharable link
                         sharableElement.scrollIntoView({ behavior: 'smooth' });
+
+                        // Handle anchor after a short delay to ensure content is loaded
+                        setTimeout(() => {
+                            const anchor = window.location.hash.slice(1);
+                            if (anchor) {
+                                scrollToElement(anchor);
+                            }
+                        }, 100);
                     })
                     .catch(error => {
                         console.error('Error loading the Markdown:', error);
@@ -323,6 +335,24 @@
             } else {
                 previewElement.innerHTML = '<p class="error">Please enter a valid URL.</p>';
             }
+        }
+
+        function addClickableAnchors() {
+            const headers = document.querySelectorAll('#preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6');
+            headers.forEach((header, index) => {
+                const id = `section-${index}`;
+                header.id = id;
+                const anchor = document.createElement('a');
+                anchor.className = 'header-anchor';
+                anchor.href = `#${id}`;
+                anchor.textContent = '#';
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    updateSharableLink(id);
+                    scrollToElement(id);
+                });
+                header.insertBefore(anchor, header.firstChild);
+            });
         }
 
         function updateSharableLink(anchor = '') {
@@ -340,7 +370,8 @@
             const sharableElement = document.getElementById('sharable');
             sharableElement.innerHTML = `
                 <p>Sharable link:</p>
-                <input type="text" value="${sharableUrl}" readonly style="width: 100%;">
+                <input type="text" id="sharableInput" value="${sharableUrl}" readonly style="width: calc(100% - 70px);">
+                <button onclick="copyToClipboard()" class="copy-btn">Copy</button>
             `;
         }
 
@@ -349,6 +380,20 @@
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
+        }
+
+        function copyToClipboard() {
+            const sharableInput = document.getElementById('sharableInput');
+            sharableInput.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
+        }
+
+        function copyExampleUrl(element) {
+            const url = element.textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Example URL copied to clipboard!');
+            });
         }
 
         // Check for URL parameter on page load
@@ -361,14 +406,6 @@
                 document.getElementById('content-only-mode').style.display = 'block';
                 document.getElementById('preview').style.marginTop = '20px';
                 generate();
-                
-                // Handle anchor after a short delay to ensure content is loaded
-                setTimeout(() => {
-                    const anchor = window.location.hash.slice(1);
-                    if (anchor) {
-                        scrollToElement(anchor);
-                    }
-                }, 1000);
             }
         });
     </script>
