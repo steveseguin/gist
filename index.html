@@ -60,13 +60,11 @@
             font-family: 'Poppins', Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            max-width: 1000px; /* Changed from 800px to 1000px */
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: var(--bg-color);
             overflow-x: hidden;
-            min-height: 100vh; /* Ensure the body fills the entire viewport height */
-            box-sizing: border-box; /* Include padding in the element's total width and height */
         }
         header {
             background: var(--header-bg);
@@ -98,14 +96,6 @@
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
-        }
-        #content {
-            background-color: var(--content-bg);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--input-border);
-            word-wrap: break-word; /* Allow long strings to break and wrap */
-            overflow-wrap: break-word; /* Alternative property for better browser support */
         }
         .download-btn:hover {
             background-color: var(--button-hover);
@@ -141,6 +131,12 @@
         .github-btn:hover {
             background-color: var(--button-hover);
         }
+        #content {
+            background-color: var(--content-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+        }
         #content pre, #content code {
             background-color: var(--code-bg);
             border-radius: 5px;
@@ -149,19 +145,16 @@
         }
         img {
             max-width: 100%;
-            height: auto; /* Maintain aspect ratio */
         }
         #input-container {
             margin-bottom: 20px;
         }
         #input {
-            width: calc(100% - 100px); /* Adjust width to account for button */
-            max-width: 100%;
+            width: 70%;
             padding: 10px;
             background-color: var(--input-bg);
             color: var(--text-color);
             border: 1px solid var(--input-border);
-            box-sizing: border-box; /* Include padding in the element's total width */
         }
         button {
             padding: 10px 15px;
@@ -203,7 +196,7 @@
         h6:hover .header-anchor {
             opacity: 1;
         }
-        #-only-mode {
+        #content-only-mode {
             display: none;
         }
         .copy-btn {
@@ -224,22 +217,9 @@
             border-radius: 3px;
             cursor: pointer;
         }
-        #sharable:empty, #preview:empty {
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            #input {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            button {
-                width: 100%;
-            }
-        }
+    #sharable:empty, #preview:empty {
+        display: none;
+    }
     </style>
 </head>
 <body>
@@ -249,11 +229,11 @@
             <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
             <button onclick="generate()">Generate</button>
             <br /><br /><br />
-            An example URL you can try is: <i></i><span class="example-url" onclick="copyExampleUrl(this)">https://gist.githubuser.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span></i>
+            An example URL you can try is: <i></i><span class="example-url" onclick="copyExampleUrl(this)">https://gist.githubusercontent.com/steveseguin/039b744d830e050f653b7bca6e1d9122/raw</span></i>
         </div>
         <div id="sharable"></div>
     </div>
-    <div id="-only-mode"></div>
+    <div id="content-only-mode"></div>
     <div id="preview"></div>
     <script>
         function convertGistUrl(url) {
@@ -261,7 +241,7 @@
             const match = url.match(gistRegex);
             if (match) {
                 const gistId = match[1];
-                return `https://gist.githubuser.com/${gistId}/raw`;
+                return `https://gist.githubusercontent.com/${gistId}/raw`;
             }
             return url;
         }
@@ -312,7 +292,7 @@
                 const anchor = document.createElement('a');
                 anchor.className = 'header-anchor';
                 anchor.href = `#${id}`;
-                anchor.text = '#';
+                anchor.textContent = '#';
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
                     updateSharableLink(id);
@@ -348,18 +328,18 @@
             alert('Link copied to clipboard!');
         }
         function copyExampleUrl(element) {
-            const url = element.text;
+            const url = element.textContent;
             navigator.clipboard.writeText(url).then(() => {
                 alert('Example URL copied to clipboard!');
             });
         }
-        document.addEventListener("DOMLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const markdownUrl = urlParams.get('url');
             if (markdownUrl) {
                 document.getElementById('input').value = markdownUrl;
                 document.getElementById('full-interface').style.display = 'none';
-                document.getElementById('-only-mode').style.display = 'block';
+                document.getElementById('content-only-mode').style.display = 'block';
                 document.getElementById('preview').style.marginTop = '20px';
                 generate();
             }
