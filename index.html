@@ -303,21 +303,12 @@
     <div id="content-only-mode"></div>
     <div id="preview"></div>
     <script>
-        function convertGistUrl(url) {
-            const gistRegex = /^https:\/\/gist\.github\.com\/([^\/]+\/[^\/]+)/;
-            const match = url.match(gistRegex);
-            if (match) {
-                const gistId = match[1];
-                return `https://gist.githubusercontent.com/${gistId}/raw`;
-            }
-            return url;
-        }
         function generate() {
             const input = document.getElementById("input").value;
             const previewElement = document.getElementById('preview');
             const sharableElement = document.getElementById('sharable');
             if (input) {
-                const convertedUrl = convertGistUrl(input);
+                const convertedUrl = convertUrl(input);  // Use the new function here
                 fetch(convertedUrl)
                     .then(response => {
                         if (!response.ok) {
@@ -419,6 +410,27 @@
                 }
             });
         });
+
+        function convertUrl(url) {
+            // Convert GitHub Gist URLs
+            const gistRegex = /^https:\/\/gist\.github\.com\/([^\/]+\/[^\/]+)/;
+            const gistMatch = url.match(gistRegex);
+            if (gistMatch) {
+                return `https://gist.githubusercontent.com/${gistMatch[1]}/raw`;
+            }
+        
+            // Convert GitHub repository file URLs
+            const githubRegex = /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/blob\/(.+)/;
+            const githubMatch = url.match(githubRegex);
+            if (githubMatch) {
+                return `https://raw.githubusercontent.com/${githubMatch[1]}/${githubMatch[2]}`;
+            }
+        
+            // Return the original URL if it doesn't match any conversion patterns
+            return url;
+        }
+        
+
         observer.observe(document.getElementById('preview'), { childList: true, subtree: true });
     </script>
 </body>
