@@ -14,23 +14,14 @@
       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
       
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', Arial, sans-serif;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-        }
-        
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            color: #333;
             background-color: #e5e5e5;
-        	padding-bottom: 40px;
-        	line-height: 1.6;
-        	overflow-x: hidden;
+            overflow-x: hidden;
         }
         
         header {
@@ -217,20 +208,34 @@
 <body>
     <h1>Markdown to HTML Viewer</h1>
     <div id="input-container">
-        <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist raw URL)">
+        <input type="text" id="input" placeholder="Enter URL to Markdown file (e.g., GitHub Gist URL)">
         <button onclick="generate()">Generate</button>
     </div>
     <div id="sharable"></div>
     <div id="preview"></div>
 
     <script>
+        function convertGistUrl(url) {
+            const gistRegex = /^https:\/\/gist\.github\.com\/([^\/]+\/[^\/]+)/;
+            const match = url.match(gistRegex);
+            
+            if (match) {
+                const gistId = match[1];
+                return `https://gist.githubusercontent.com/${gistId}/raw`;
+            }
+            
+            return url;
+        }
+
         function generate() {
             const input = document.getElementById("input").value;
             const previewElement = document.getElementById('preview');
             const sharableElement = document.getElementById('sharable');
 
             if (input) {
-                fetch(input)
+                const convertedUrl = convertGistUrl(input);
+                
+                fetch(convertedUrl)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -278,3 +283,5 @@
     </script>
 </body>
 </html>
+
+
