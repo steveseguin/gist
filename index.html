@@ -19,274 +19,310 @@
     <meta property="twitter:description" content="View Markdown files as HTML with anchor selection and easy sharing. Great for developers and content creators.">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-        :root {
-            --bg-color: #e5e5e5;
-            --text-color: #333;
-            --header-bg: #1a1a1a;
-            --header-text: #fff;
-            --content-bg: #fff;
-            --link-color: #007bff;
-            --link-hover: #0056b3;
-            --code-bg: #eee;
-            --error-color: #ff0000;
-            --button-bg: #007bff;
-            --button-text: #fff;
-            --button-hover: #0056b3;
-            --input-bg: #fff;
-            --input-border: #ddd;
-            --sharable-bg: #f0f0f0;
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #1a1a1a;
-                --text-color: #f0f0f0;
-                --header-bg: #000;
-                --header-text: #fff;
-                --content-bg: #2a2a2a;
-                --link-color: #4da3ff;
-                --link-hover: #80bdff;
-                --code-bg: #333;
-                --error-color: #ff6666;
-                --button-bg: #4da3ff;
-                --button-text: #fff;
-                --button-hover: #80bdff;
-                --input-bg: #333;
-                --input-border: #555;
-                --sharable-bg: #333;
-            }
-        }
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            max-width: 1220px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--bg-color);
-            overflow-x: hidden;
-        }
-        header {
-            background: var(--header-bg);
-            color: var(--header-text);
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            margin: 0;
-            font-size: 2.4em;
-        }
-        #markdown h1 {
-            display: none;
-        }
-        p {
-            margin: 10px 0 0;
-            font-size: 1.2em;
-        }
-        .download-btn {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .download-btn:hover {
-            background-color: var(--button-hover);
-            color: var(--button-text);
-        }
-        .section {
-            padding: 20px 20px 40px 20px;
-            background-color: var(--content-bg);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin: 20px;
-            border-radius: 10px;
-        }
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-        a:hover {
-            color: var(--link-hover);
-            text-decoration: underline;
-        }
-        .github-btn {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s;
-            margin-top: 12px;
-        }
-        .github-btn:hover {
-            background-color: var(--button-hover);
-        }
-        #content {
-            background-color: var(--content-bg);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--input-border);
-        }
-        #content pre, #content code {
-            background-color: var(--code-bg);
-            border-radius: 5px;
-            padding: 5px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        img {
-            max-width: 100%;
-        }
-        #input-container {
-            margin-bottom: 20px;
-        }
-        #input {
-            width: 70%;
-            padding: 10px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid var(--input-border);
-        }
-        button {
-            padding: 10px 15px;
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: var(--button-hover);
-        }
-        #preview {
-            border: 1px solid var(--input-border);
-            padding: 20px;
-            margin-top: 20px;
-            background-color: var(--content-bg);
-        }
-        #sharable {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: var(--sharable-bg);
-            border-radius: 5px;
-        }
-        .error {
-            color: var(--error-color);
-            margin-top: 10px;
-        }
-        .header-anchor {
-            opacity: 0;
-            text-decoration: none;
-            margin-left: -20px;
-            padding-right: 4px;
-        }
-        h1:hover .header-anchor,
-        h2:hover .header-anchor,
-        h3:hover .header-anchor,
-        h4:hover .header-anchor,
-        h5:hover .header-anchor,
-        h6:hover .header-anchor {
-            opacity: 1;
-        }
-        #content-only-mode {
-            display: none;
-        }
-        .copy-btn {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .copy-btn:hover {
-            background-color: var(--button-hover);
-        }
-        .example-url {
-            background-color: var(--code-bg);
-            padding: 5px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        #sharable:empty, #preview:empty {
-            display: none;
-        }
-        @media screen and (max-width: 768px) {
-            body {
-                padding: 10px;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
-        
-            .section {
-                margin: 10px 0;
-                padding: 15px;
-            }
-        
-            #input {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        
-            button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        
-            #sharable input {
-                width: calc(100% - 70px);
-            }
-        
-            .copy-btn {
-                margin-left: 0;
-                margin-top: 10px;
-            }
-        
-            .example-url {
-                word-break: break-all;
-            }
-        
-            pre, code {
-                white-space: pre-wrap;
-                word-wrap: break-word;
-            }
-        
-            img {
-                height: auto;
-            }
-        }
-        
-        /* General improvements */
-        html, body {
-            min-height: 100vh;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        #preview {
-            flex-grow: 1;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        #content img {
-            max-width: 100%;
-            height: auto;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:wght@400;600&display=swap');
+
+:root {
+    --bg-color: #f7f3eb;
+    --text-color: #333;
+    --header-bg: #2c3e50;
+    --header-text: #ecf0f1;
+    --content-bg: #fff;
+    --link-color: #3498db;
+    --link-hover: #2980b9;
+    --code-bg: #f0f0f0;
+    --error-color: #e74c3c;
+    --button-bg: #3498db;
+    --button-text: #fff;
+    --button-hover: #2980b9;
+    --input-bg: #fff;
+    --input-border: #bdc3c7;
+    --sharable-bg: #ecf0f1;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #2c3e50;
+        --text-color: #ecf0f1;
+        --header-bg: #34495e;
+        --header-text: #ecf0f1;
+        --content-bg: #34495e;
+        --link-color: #3498db;
+        --link-hover: #2980b9;
+        --code-bg: #2c3e50;
+        --error-color: #e74c3c;
+        --button-bg: #3498db;
+        --button-text: #ecf0f1;
+        --button-hover: #2980b9;
+        --input-bg: #2c3e50;
+        --input-border: #7f8c8d;
+        --sharable-bg: #2c3e50;
+    }
+}
+
+body {
+    font-family: 'Lora', serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--bg-color);
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d2d2d2' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2em;
+    font-weight: 700;
+}
+
+#markdown h1 {
+    display: block;
+    font-size: 1.8em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+}
+
+p {
+    margin: 10px 0 0;
+    font-size: 1em;
+}
+
+.download-btn, .github-btn, button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.1s;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.download-btn:hover, .github-btn:hover, button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+.section {
+    padding: 20px;
+    background-color: var(--content-bg);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+#content {
+    background-color: var(--content-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#content pre, #content code {
+    background-color: var(--code-bg);
+    border-radius: 5px;
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    overflow-x: auto;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#input-container {
+    margin-bottom: 20px;
+}
+
+#input {
+    width: calc(100% - 110px);
+    padding: 10px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#preview {
+    border: 1px solid var(--input-border);
+    padding: 20px;
+    margin-top: 20px;
+    background-color: var(--content-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#sharable {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--sharable-bg);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.error {
+    color: var(--error-color);
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.header-anchor {
+    opacity: 0;
+    text-decoration: none;
+    margin-left: -20px;
+    padding-right: 4px;
+    transition: opacity 0.3s;
+}
+
+h1:hover .header-anchor,
+h2:hover .header-anchor,
+h3:hover .header-anchor,
+h4:hover .header-anchor,
+h5:hover .header-anchor,
+h6:hover .header-anchor {
+    opacity: 1;
+}
+
+.copy-btn {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.example-url {
+    background-color: var(--code-bg);
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.9em;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .section {
+        margin: 10px 0;
+        padding: 15px;
+    }
+
+    #input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #sharable input {
+        width: calc(100% - 70px);
+    }
+
+    .copy-btn {
+        margin-left: 0;
+        margin-top: 10px;
+        width: auto;
+    }
+
+    .example-url {
+        word-break: break-all;
+    }
+
+    pre, code {
+        font-size: 14px;
+    }
+}
+
+/* Additional styles for better readability */
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#content h1 { font-size: 1.8em; }
+#content h2 { font-size: 1.5em; }
+#content h3 { font-size: 1.3em; }
+#content h4 { font-size: 1.1em; }
+#content h5 { font-size: 1em; }
+#content h6 { font-size: 0.9em; }
+
+#content ul, #content ol {
+    padding-left: 20px;
+}
+
+#content blockquote {
+    border-left: 4px solid var(--link-color);
+    padding-left: 15px;
+    margin-left: 0;
+    font-style: italic;
+    color: #777;
+}
+
+#content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+#content th, #content td {
+    border: 1px solid var(--input-border);
+    padding: 8px;
+    text-align: left;
+}
+
+#content th {
+    background-color: var(--sharable-bg);
+    font-weight: bold;
+}
+
+#content tr:nth-child(even) {
+    background-color: var(--code-bg);
+}
     </style>
 </head>
 <body>
