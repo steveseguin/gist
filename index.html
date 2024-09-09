@@ -19,43 +19,43 @@
     <meta property="twitter:description" content="View Markdown files as HTML with anchor selection and easy sharing. Great for developers and content creators.">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:wght@400;600&display=swap');
 
 :root {
-    --bg-color: #f7f3eb;
+    --bg-color: #f5f5f5;
     --text-color: #333;
-    --header-bg: #2c3e50;
-    --header-text: #ecf0f1;
+    --header-bg: #4a4a4a;
+    --header-text: #f5f5f5;
     --content-bg: #fff;
-    --link-color: #3498db;
-    --link-hover: #2980b9;
+    --link-color: #5a6f8f;
+    --link-hover: #3d4c66;
     --code-bg: #f0f0f0;
     --error-color: #e74c3c;
-    --button-bg: #3498db;
+    --button-bg: #5a6f8f;
     --button-text: #fff;
-    --button-hover: #2980b9;
+    --button-hover: #3d4c66;
     --input-bg: #fff;
     --input-border: #bdc3c7;
-    --sharable-bg: #ecf0f1;
+    --sharable-bg: #e8e8e8;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-color: #2c3e50;
-        --text-color: #ecf0f1;
-        --header-bg: #34495e;
-        --header-text: #ecf0f1;
-        --content-bg: #34495e;
-        --link-color: #3498db;
-        --link-hover: #2980b9;
-        --code-bg: #2c3e50;
+        --bg-color: #2a2a2a;
+        --text-color: #e0e0e0;
+        --header-bg: #3a3a3a;
+        --header-text: #f5f5f5;
+        --content-bg: #3a3a3a;
+        --link-color: #7f97c1;
+        --link-hover: #a6b8d4;
+        --code-bg: #2a2a2a;
         --error-color: #e74c3c;
-        --button-bg: #3498db;
-        --button-text: #ecf0f1;
-        --button-hover: #2980b9;
-        --input-bg: #2c3e50;
-        --input-border: #7f8c8d;
-        --sharable-bg: #2c3e50;
+        --button-bg: #5a6f8f;
+        --button-text: #f5f5f5;
+        --button-hover: #7f97c1;
+        --input-bg: #2a2a2a;
+        --input-border: #4a4a4a;
+        --sharable-bg: #2a2a2a;
     }
 }
 
@@ -67,7 +67,7 @@ body {
     margin: 0 auto;
     padding: 20px;
     background-color: var(--bg-color);
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d2d2d2' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d0d0d0' fill-opacity='0.15'%3E%3Cpath d='M30 30h30v30H30V30zm0-30h30v30H30V0zM0 30h30v30H0V30zM0 0h30v30H0V0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 header {
